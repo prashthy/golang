@@ -20,12 +20,22 @@ func check(e error) {
 	}
 }
 
+func print_menu() {
+	fmt.Println("***************************************************************")
+	fmt.Println("Examples on how to execute the script")
+	fmt.Println("spanish_english.exe -eng_to_span=true (This will give words in English)")
+	fmt.Println("spanish_english.exe (This will list words in Spanish)")
+	fmt.Println("spanish_english.exe -filename=chap1.txt (This will list only words from the first chapter)")
+	fmt.Println("***************************************************************")
+}
+
 func main() {
 	var eng_to_span = flag.Bool("eng_to_span", false, "Set to false for Spanish to English")
 	var fname = flag.String("filename", "all.txt", "Name of the file that has the words")
 	flag.Parse()
 	var content []byte
 	var err error
+	print_menu()
 
 	if (*fname == "") {
 		content, err = ioutil.ReadFile(filename)
@@ -49,14 +59,6 @@ func main() {
 		}
 		i++
 	}
-	fmt.Println("spanWords")
-	for _, value := range spanWords {
-		fmt.Println(value);
-	}
-	fmt.Println("engWords")
-	for _, value := range engWords {
-		fmt.Println(value);
-	}
 	numWords := len(spanWords)
 	rand.Seed(time.Now().UnixNano())
 	for {
@@ -65,12 +67,12 @@ func main() {
 			fmt.Print(engWords[idx])
 			scan := bufio.NewScanner(os.Stdin)
 			scan.Scan()
-			fmt.Printf("%s\n", spanWords[idx])
+			fmt.Printf("%s\n\n", spanWords[idx])
 		} else {
 			fmt.Print(spanWords[idx])
 			scan := bufio.NewScanner(os.Stdin)
 			scan.Scan()
-			fmt.Printf("%s\n", engWords[idx])
+			fmt.Printf("%s\n\n", engWords[idx])
 		}
 		//fmt.Print(engWords[idx])
 	}
