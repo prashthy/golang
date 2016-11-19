@@ -4,10 +4,12 @@ import (
 	"fmt"
 	//"io"
 	"io/ioutil"
-	//"os"
+	"os"
 	"strings"
+	"bufio"
 	"math/rand"
 	"time"
+	"flag"
 )
 
 var filename string = "dict.txt"
@@ -19,7 +21,17 @@ func check(e error) {
 }
 
 func main() {
-	content, err := ioutil.ReadFile(filename)
+	var eng_to_span = flag.Bool("eng_to_span", false, "Set to false for Spanish to English")
+	var fname = flag.String("filename", "all.txt", "Name of the file that has the words")
+	flag.Parse()
+	var content []byte
+	var err error
+
+	if (*fname == "") {
+		content, err = ioutil.ReadFile(filename)
+	} else {
+		content, err = ioutil.ReadFile(*fname)
+	}
 	check(err)
 	lines := strings.Split(string(content), "\n")
 
@@ -49,11 +61,17 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	for {
 		idx := rand.Intn(numWords)
-		fmt.Println(engWords[idx])
-		var i byte
-		fmt.Scanf("Press any key to continue: %c", &i)
-		fmt.Println(spanWords[idx])
-		fmt.Println()
-		fmt.Scanf("Press any key to continue: %c", &i)
+		if (*eng_to_span) {
+			fmt.Print(engWords[idx])
+			scan := bufio.NewScanner(os.Stdin)
+			scan.Scan()
+			fmt.Printf("%s\n", spanWords[idx])
+		} else {
+			fmt.Print(spanWords[idx])
+			scan := bufio.NewScanner(os.Stdin)
+			scan.Scan()
+			fmt.Printf("%s\n", engWords[idx])
+		}
+		//fmt.Print(engWords[idx])
 	}
 }
